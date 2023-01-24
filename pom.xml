@@ -6,6 +6,7 @@
 	<modules>
 		<module>spring-auth-server</module>
 		<module>catalog-service</module>
+		<module>common-code</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
