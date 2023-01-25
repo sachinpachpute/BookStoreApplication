@@ -28,14 +28,14 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
-#eureka:
-#  client:
-#    serviceUrl:
-#      defaultZone: http://${EUREKA_HOST:localhost:8761}/eureka/
-#    registerWithEureka: true
-#    fetch-registry: true #eureka discovery is enabled in this profile
-#  instance:
-#    prefer-ip-address: false
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOST:localhost:8761}/eureka/
+    registerWithEureka: true
+    fetch-registry: true #eureka discovery is enabled in this profile
+  instance:
+    prefer-ip-address: false
 
 
 #  jpa:
