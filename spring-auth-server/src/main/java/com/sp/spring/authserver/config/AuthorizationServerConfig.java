@@ -5,12 +5,19 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.sp.spring.authserver.service.AppUserDetailsService;
+import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,14 +58,14 @@ public class AuthorizationServerConfig {
     // http://localhost:3001/oauth2/token?client_id=client&redirect_uri=https://springone.io/authorized&grant_type=authorization_code&code=dWlJMGpGlUAPz0sRU1y8suXDyWejo0_B4-WrLP-ks5kSlcdvlGG-u1OxOORvvpm7IMJaC_lMqzTX2Oh6AKHGOb2J4-Hp6PVPvGjLeUQMnWzz6h3Xyy1D0S6czbiTeU8f&code_verifier=qPsH306-ZDDaOE8DFzVn05TkN3ZZoVmI_6x4LsVglQI
     private final CORSCustomizer corsCustomizer;
 
+    //private final AppUserDetailsService appUserDetailsService;
+
     @Bean
     @Order(1)
     public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
         corsCustomizer.corsCustomizer(http);
-
-        //http.cors((Customizer<CorsConfigurer<HttpSecurity>>) corsCustomizer);
 
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 //Validation for authorizationEndpoint
@@ -94,11 +101,43 @@ public class AuthorizationServerConfig {
     @Order(2)
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
         http.formLogin()
+                .loginPage("/login")
+                .permitAll()
                 .and()
-                .authorizeHttpRequests().anyRequest().authenticated();
+                .authorizeHttpRequests()
+                //.requestMatchers("/oauth2/**").permitAll()
+                .anyRequest().authenticated();
+                /*.and() Not needed
+                .authenticationProvider(authenticationProvider());*/
 
         return http.build();
     }
+
+/*    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                // ...
+                .and()
+                .formLogin()
+                .loginPage("/login.html")
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/homepage.html", true)
+                .failureUrl("/login.html?error=true")
+                .failureHandler(authenticationFailureHandler())
+                .and()
+                .logout()
+                .logoutUrl("/perform_logout")
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessHandler(logoutSuccessHandler());
+        return http.build();
+
+        loginPage() – the custom login page
+        loginProcessingUrl() – the URL to submit the username and password to
+        defaultSuccessUrl() – the landing page after a successful login
+        failureUrl() – the landing page after an unsuccessful login
+        logoutUrl() – the custom logout
+    }*/
+
 
     //By creating a AppUserDetailsService class and adding @Service annotation on it, we have created
     //a Bean for UserDetailsService. We can now remove following InMemoryUserDetailsManager bean.
@@ -117,6 +156,15 @@ public class AuthorizationServerConfig {
         return NoOpPasswordEncoder.getInstance();
     }*/
 
+
+    /* Not needed Automatically configured
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(appUserDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }*/
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -130,7 +178,8 @@ public class AuthorizationServerConfig {
                 //.clientSecret("secret")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
-                .redirectUri("https://springone.io/authorized")
+                .redirectUri("http://127.0.0.1:3000/authorized")
+                //.redirectUri("https://springone.io/authorized")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)

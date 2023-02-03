@@ -9,7 +9,10 @@
 		<module>common-code</module>
 		<module>eureka-discovery-service</module>
 		<module>api-gateway-service</module>
-	</modules>
+        <module>account-service</module>
+		<module>feign-client</module>
+		<module>order-service</module>
+    </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>

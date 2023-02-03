@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: CATALOG-SERVICE
+
   jpa:
     database: mysql
     open-in-view: true
@@ -16,15 +17,18 @@ spring:
         use_sql_comments: true
         show_sql: true
         format_sql: true
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/bookstore_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: PaSSworD
+
   security:
     jwt:
       issuer-uri: http://auth-server:3001/oauth2/jwks
       public-key: classpath:jwt-signing-public-key.txt
+
   main:
     allow-bean-definition-overriding: true
 

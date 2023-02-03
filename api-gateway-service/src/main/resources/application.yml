@@ -39,12 +39,6 @@ spring:
             - Path=/api/auth/**
           filters:
             - StripPrefix=2
-        - id: resource-server
-          uri: lb://RESOURCE-SERVER
-          predicates:
-            - Path=/api/resource/**
-          filters:
-            - StripPrefix=2
 
 eureka:
   client:

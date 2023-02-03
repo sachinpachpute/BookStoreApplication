@@ -22,8 +22,9 @@ public class ResourceServerConfig {
                         .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
         );
         http.authorizeHttpRequests()
-                /*.requestMatchers("/authentication/**").permitAll()
-                .requestMatchers("/services").hasAuthority("SCOPE_services:read")*/
+                //.requestMatchers("/**").permitAll()
+                .requestMatchers("/products","/product/**","/review", "/image/**").permitAll()
+                /*.requestMatchers("/services").hasAuthority("SCOPE_services:read")*/
                 .anyRequest().authenticated();
         return http.build();
     }
