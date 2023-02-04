@@ -51,12 +51,11 @@ export const getAccessToken = async (code) => {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   };*/
-    alert("about to call token endpoint");
   const responseData = await axios
     //.post(`${AUTHORIZATION_SERVER_BASE_URL}/oauth2/token`, paramsEncoded, axiosConfig)
     .post(`${AUTHORIZATION_SERVER_BASE_URL}/oauth2/token`, paramsEncoded)
     .then((response) => {
-    alert(response);
+    //alert(response);
       return response.data;
     });
   return responseData;
@@ -185,7 +184,7 @@ export const uploadImageApi = async (axiosConfig, formData) => {
 };
 
 export const addToCartApi = async (addToCartRequestBody) => {
-alert("inside addToCartApi rest api")
+alert("inside RestApiCalls:addToCartApi");
   const axiosConfig = getAxiosConfig();
   const responseData = axios
     .post(`${BACKEND_API_GATEWAY_URL}/api/order/cart/cartItem`, addToCartRequestBody, axiosConfig)
@@ -206,7 +205,6 @@ export const removeCartItemApi = async (cartItemId) => {
 export const getCartDetailsApi = async () => {
   const axiosConfig = getAxiosConfig();
   const cartDetails = await axios.get(`${BACKEND_API_GATEWAY_URL}/api/order/cart`, axiosConfig).then((response) => {
-    alert("printing cart details on colsole");
     console.log(response.data);
     return response.data;
   });

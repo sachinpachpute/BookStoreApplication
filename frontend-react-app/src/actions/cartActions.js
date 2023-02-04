@@ -42,6 +42,7 @@ export const tempProductsAction = (pageNumber) => async (dispatch) => {
 export const addToCartAction = (addToCartRequestBody) => async (dispatch) => {
   try {
     dispatch(cartAddItemRequest());
+    //alert("inside addToCartAction:addToCartApi");
     await addToCartApi(addToCartRequestBody);
     dispatch(cartAddItemSuccess());
     dispatch(getCartDetailsAction());
@@ -63,7 +64,6 @@ export const removeFromCartAction = (cartItemId) => async (dispatch) => {
 
 export const getCartDetailsAction = () => async (dispatch) => {
   try {
-    alert("about to call cartDetailsRequest");
     dispatch(cartDetailsRequest());
     const cartResponse = await getCartDetailsApi();
     dispatch(cardDetailsSuccess(cartResponse));

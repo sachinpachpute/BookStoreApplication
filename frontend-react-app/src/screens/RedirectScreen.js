@@ -33,7 +33,6 @@ const RedirectScreen = () => {
     }, []);
     useEffect(() => {
         if(!searchParams?.get('code')){
-        alert("inside redirect with no code")
             const codeChallenge = sessionStorage.getItem('codeChallenge');
             //alert('codeChallenge while requesting authorize: '+codeChallenge);
             const link = `${AUTHORIZATION_SERVER_BASE_URL}/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=openid&redirect_uri=${REDIRECT_URI}&code_challenge=${codeChallenge}&code_challenge_method=S256`;            

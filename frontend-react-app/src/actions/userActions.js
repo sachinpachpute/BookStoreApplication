@@ -33,9 +33,9 @@ export const login = (code) => async (dispatch) => {
     //Login
     const loginResponse = await getAccessToken(code);
     
-    alert("now printing loginReponse");
+    //alert("now printing loginReponse");
     console.log(loginResponse);
-    alert("now printing loginReponse.access_token");
+    //alert("now printing loginReponse.access_token");
     console.log(loginResponse.access_token);
     
     //alert(loginResponse.access_token);

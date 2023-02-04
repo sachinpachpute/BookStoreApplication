@@ -18,9 +18,9 @@ export const userLoginSlice = createSlice({
         state.error = action.payload;
       },
       userLogout: (state, action) => {     
-        // localStorage.clear();
-        // sessionStorage.clear();
-        // window.location.href = '/login';        
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/login';        
         state = {};   
       },
     }

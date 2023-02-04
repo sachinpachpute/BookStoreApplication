@@ -30,7 +30,6 @@ const LoginScreen = (props) => {
   const redirect = location.search ? location.search.split('=')[1] : '/'
 
   useEffect(() => {
-  alert("in login page");
     if (userInfo) {
       navigateLog(`/${redirect}`);
     }

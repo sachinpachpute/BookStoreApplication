@@ -23,7 +23,6 @@ const Header = (props) => {
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
-    alert('log out handler');
     dispatch(logout());   
   };
 

@@ -44,6 +44,7 @@ const CartScreen = (props) => {
       productId: pId || productId,
       quantity: q || qty
     };
+    alert("inside CartScreen:addToCart");
     dispatch(addToCartAction(addToCartRequestBody));
   };
 
