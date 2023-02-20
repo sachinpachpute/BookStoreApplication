@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 
 public class CommonUtilityMethods {
 
@@ -18,9 +19,11 @@ public class CommonUtilityMethods {
     }*/
 
     public static String getUserIdFromToken(Authentication authentication) {
-       /* Map<String, String> map = (Map)((OAuth2Authentication) authentication).getUserAuthentication().getDetails();
-        return map.get("user_name");*/
-        return "userId";
+        String currentUserName = null;
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            currentUserName = authentication.getName();
+        }
+        return currentUserName;
     }
 
 

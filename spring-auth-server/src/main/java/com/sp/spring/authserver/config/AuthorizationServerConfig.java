@@ -38,6 +38,8 @@ import org.springframework.security.oauth2.server.authorization.token.JwtEncodin
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -50,6 +52,8 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.*;
+
 @Configuration
 @AllArgsConstructor
 public class AuthorizationServerConfig {
@@ -57,8 +61,6 @@ public class AuthorizationServerConfig {
     // http://localhost:3001/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=https://springone.io/authorized&code_challenge=QYPAZ5NU8yvtlQ9erXrUYR-T5AGCjCF47vN-KsaI2A8&code_challenge_method=S256
     // http://localhost:3001/oauth2/token?client_id=client&redirect_uri=https://springone.io/authorized&grant_type=authorization_code&code=dWlJMGpGlUAPz0sRU1y8suXDyWejo0_B4-WrLP-ks5kSlcdvlGG-u1OxOORvvpm7IMJaC_lMqzTX2Oh6AKHGOb2J4-Hp6PVPvGjLeUQMnWzz6h3Xyy1D0S6czbiTeU8f&code_verifier=qPsH306-ZDDaOE8DFzVn05TkN3ZZoVmI_6x4LsVglQI
     private final CORSCustomizer corsCustomizer;
-
-    //private final AppUserDetailsService appUserDetailsService;
 
     @Bean
     @Order(1)
@@ -102,69 +104,18 @@ public class AuthorizationServerConfig {
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
         http.formLogin()
                 .loginPage("/login")
-                .permitAll()
+                //.permitAll()
                 .and()
-                .authorizeHttpRequests()
-                //.requestMatchers("/oauth2/**").permitAll()
-                .anyRequest().authenticated();
-                /*.and() Not needed
-                .authenticationProvider(authenticationProvider());*/
+                .logout()
+                .deleteCookies("JSESSIONID", "JWT")
+                .logoutSuccessUrl("/")
+                .clearAuthentication(true)
+                .invalidateHttpSession(true);
 
         return http.build();
     }
 
-/*    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                // ...
-                .and()
-                .formLogin()
-                .loginPage("/login.html")
-                .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/homepage.html", true)
-                .failureUrl("/login.html?error=true")
-                .failureHandler(authenticationFailureHandler())
-                .and()
-                .logout()
-                .logoutUrl("/perform_logout")
-                .deleteCookies("JSESSIONID")
-                .logoutSuccessHandler(logoutSuccessHandler());
-        return http.build();
 
-        loginPage() – the custom login page
-        loginProcessingUrl() – the URL to submit the username and password to
-        defaultSuccessUrl() – the landing page after a successful login
-        failureUrl() – the landing page after an unsuccessful login
-        logoutUrl() – the custom logout
-    }*/
-
-
-    //By creating a AppUserDetailsService class and adding @Service annotation on it, we have created
-    //a Bean for UserDetailsService. We can now remove following InMemoryUserDetailsManager bean.
-    /*@Bean
-    public UserDetailsService userDetailsService() {
-        var u1 = User.withUsername("user")
-                .password("password")
-                .authorities("read")
-                .build();
-
-        return new InMemoryUserDetailsManager(u1);
-    }*/
-
-    /*@Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }*/
-
-
-    /* Not needed Automatically configured
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(appUserDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }*/
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -175,12 +126,13 @@ public class AuthorizationServerConfig {
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("client")
-                //.clientSecret("secret")
+                //.clientSecret(passwordEncoder().encode("secret"))
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .redirectUri("http://127.0.0.1:3000/authorized")
                 //.redirectUri("https://springone.io/authorized")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+                //.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 /* Don't know what this setting is for
@@ -233,8 +185,61 @@ public class AuthorizationServerConfig {
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet());
                 context.getClaims().claim("roles", authorities);
+                context.getClaims().claim("user_name", principal.getName());
             }
         };
     }
 
+    /*    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                // ...
+                .and()
+                .formLogin()
+                .loginPage("/login.html")
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/homepage.html", true)
+                .failureUrl("/login.html?error=true")
+                .failureHandler(authenticationFailureHandler())
+                .and()
+                .logout()
+                .logoutUrl("/perform_logout")
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessHandler(logoutSuccessHandler());
+        return http.build();
+
+        loginPage() – the custom login page
+        loginProcessingUrl() – the URL to submit the username and password to
+        defaultSuccessUrl() – the landing page after a successful login
+        failureUrl() – the landing page after an unsuccessful login
+        logoutUrl() – the custom logout
+    }*/
+
+
+    //By creating a AppUserDetailsService class and adding @Service annotation on it, we have created
+    //a Bean for UserDetailsService. We can now remove following InMemoryUserDetailsManager bean.
+    /*@Bean
+    public UserDetailsService userDetailsService() {
+        var u1 = User.withUsername("user")
+                .password("password")
+                .authorities("read")
+                .build();
+
+        return new InMemoryUserDetailsManager(u1);
+    }*/
+
+    /*@Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }*/
+
+
+    /* Not needed Automatically configured
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(appUserDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }*/
 }

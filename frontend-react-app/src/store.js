@@ -27,6 +27,16 @@ import{
   cartDetailSlice,
   cartRemoveSlice,
 } from './reducers/cartSlice';
+import{
+  addressSaveSlice,
+  addressListSlice,
+  addressDeleteSlice,
+} from './reducers/addressSlice';
+import{
+  paymentMethodSaveSlice,
+  paymentMethodListSlice,
+} from './reducers/paymentSlice';
+
 import ToastMiddleware from './middlewares/ToastMiddleware';
 
 const store = configureStore({ 
@@ -38,7 +48,12 @@ const store = configureStore({
     productCreate: productCreateSlice.reducer,
     productUpdate: productUpdateSlice.reducer,
 
+    order: orderSlice.reducer,
+    orderListAll:orderListAllSlice.reducer,
     orderListMy: orderListMySlice.reducer,
+    orderPreview: orderPreviewSlice.reducer,
+    orderDetail: orderDetailsSlice.reducer,
+    orderCreate: orderCreateSlice.reducer,
 
     cart: cartDetailSlice.reducer,
     cartAdd: cartAddSlice.reducer,
@@ -48,6 +63,13 @@ const store = configureStore({
     userRegister: userRegisterSlice.reducer,
     userDetails: userDetailsSlice.reducer,
     userUpdateProfile: userUpdateProfileSlice.reducer,
+
+    addressSave: addressSaveSlice.reducer,
+    addressList: addressListSlice.reducer,
+    addressDelete: addressDeleteSlice.reducer,
+
+    paymentMethodSave: paymentMethodSaveSlice.reducer,
+    paymentMethodListMy: paymentMethodListSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger, ToastMiddleware),
 })

@@ -12,6 +12,8 @@
         <module>account-service</module>
 		<module>feign-client</module>
 		<module>order-service</module>
+        <module>billing-service</module>
+        <module>payment-service</module>
     </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>

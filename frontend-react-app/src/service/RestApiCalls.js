@@ -61,40 +61,6 @@ export const getAccessToken = async (code) => {
   return responseData;
 };
 
-// const headers = new Headers();
-// headers.append('Content-type', 'application/x-www-form-urlencoded');
-            
-//             const verifier = localStorage.getItem('codeVerifier');
-            
-            
-//             const url = `http://auth-server:3001/oauth2/token?client_id=client&redirect_uri=http://127.0.0.1:3000/authorized&grant_type=authorization_code&code=${code}&code_verifier=qPsH306-ZDDaOE8DFzVn05TkN3ZZoVmI_6x4LsVglQI`;
-            
-
-//             //localStorage.removeItem('codeVerifier');
-
-//             console.log(url);
-//             alert(url);
-
-//            const responseData = fetch(url, {
-//                 method: 'POST',
-//                 mode: 'cors',
-//                 headers
-//             }).then(async (response) => {
-//                 //alert(response);
-//                 const token = await response.json();
-//                 alert(token.id_token);                
-//                 //alert(token);
-//                 if(token?.id_token) {
-//                     localStorage.setItem('id_token', token.id_token);
-//                     alert('redirecting to home screen');
-//                     //navigate('/');
-//                 }
-//             }).catch((err) => {
-//                 console.log(err);
-//             })
-//             return responseData;
-//             };
-
 export const getUserInfoApi = async () => {
   const axiosConfig = getAxiosConfig();
   alert('access token : '+JSON.parse(localStorage.getItem('userInfo'))?.token)  ;
@@ -242,6 +208,47 @@ export const putUserInfoApi = async (userInfoRequestBody) => {
     .then((response) => {
       return response.data;
     });
+  return responseData;
+};
+
+export const saveAddressApi = async (addressRequestBody) => {
+  const axiosConfig = getAxiosConfig();
+  const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/billing/address`, addressRequestBody, axiosConfig).then((response) => {
+    return response.data;
+  });
+  return responseData;
+};
+
+export const getAllAddressesApi = async () => {
+  const axiosConfig = getAxiosConfig();
+  const responseData = axios.get(`${BACKEND_API_GATEWAY_URL}/api/billing/address`, axiosConfig).then((response) => {
+    return response.data;
+  });
+  return responseData;
+};
+
+export const deleteAddressApi = async (addressId) => {
+  const axiosConfig = getAxiosConfig();
+  const responseData = axios.delete(`${BACKEND_API_GATEWAY_URL}/api/billing/address/${addressId}`, axiosConfig).then((response) => {
+    return response.data;
+  });
+  return responseData;
+};
+
+export const savePaymentMethodApi = async (cardRequestBody) => {
+  const axiosConfig = getAxiosConfig();
+  const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/payment/paymentMethod`, cardRequestBody, axiosConfig).then((response) => {
+    return response.data;
+  });
+  return responseData;
+};
+
+export const getAllPaymentMethodsApi = async () => {
+  alert(" GET getAllPaymentMethodsApi ")
+  const axiosConfig = getAxiosConfig();
+  const responseData = axios.get(`${BACKEND_API_GATEWAY_URL}/api/payment/paymentMethod`, axiosConfig).then((response) => {
+    return response.data;
+  });
   return responseData;
 };
 
