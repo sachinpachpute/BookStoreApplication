@@ -244,7 +244,6 @@ export const savePaymentMethodApi = async (cardRequestBody) => {
 };
 
 export const getAllPaymentMethodsApi = async () => {
-  alert(" GET getAllPaymentMethodsApi ")
   const axiosConfig = getAxiosConfig();
   const responseData = axios.get(`${BACKEND_API_GATEWAY_URL}/api/payment/paymentMethod`, axiosConfig).then((response) => {
     return response.data;

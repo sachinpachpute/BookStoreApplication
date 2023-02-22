@@ -29,6 +29,8 @@ spring:
       issuer-uri: http://auth-server:3001/oauth2/jwks
       public-key: classpath:jwt-signing-public-key.txt
 
+  service:
+    stripeKey: pk_test_51MeLJiCj68nmJvkeUmSmytgvIeeWY1NqF2XCne0h5iot0dn5Y1AiNiVbeWcwkLloK1AQgHqHlPNJBkKKfVXNNkor00uu3qOOGp
   main:
     allow-bean-definition-overriding: true
 

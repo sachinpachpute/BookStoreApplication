@@ -35,7 +35,6 @@ const PaymentScreen = ({ history }) => {
   const { paymentMethods, loading: listLoading, error: listError } = paymentMethodListMy;
 
   useEffect(() => {
-    alert("1");
     dispatch(getMyPaymentMethodsAction());
   }, [dispatch]);
 
@@ -74,7 +73,7 @@ const PaymentScreen = ({ history }) => {
               <h2>Select Payment Method</h2>
               {paymentMethods.map((a) => (
                 <>
-                  <ListGroup.Item key={a.paymentMethodId} variant='flush'>
+                  <ListGroup.Item variant='flush'>
                     <InputGroup>
                       <Col md={1}>
                         <Form.Check

@@ -46,7 +46,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userIdFromToken = getUserIdFromToken(authentication);
 
-        GetUserResponse userResponse = accountFeignClient.getUserById(userIdFromToken);
+        GetUserResponse userResponse = accountFeignClient.getUserByUserName(userIdFromToken);
         String userName = userResponse.getFirstName()+" "+userResponse.getLastName();
 
         UserPaymentCustomer paymentCustomer = userPaymentCustomerRepository.findByUserId(userIdFromToken);

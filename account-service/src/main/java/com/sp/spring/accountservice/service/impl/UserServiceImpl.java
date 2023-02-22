@@ -19,6 +19,7 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private UserRepository userRepository;
 
+
   @Override
   public GetUserInfoResponse getUserInfo() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,6 +52,23 @@ public class UserServiceImpl implements UserService {
             .lastName(userByUserName.getLastName())
             .email(userByUserName.getEmail())
             .roles(userByUserName.getRoles())
+            .build();
+  }
+
+  @Override
+  public GetUserResponse getUserByUserId(String userId) {
+    Optional<User> userIdOptional = userRepository.findByUserId(userId);
+    User userById = userIdOptional.orElseThrow(() ->
+            new RunTimeExceptionPlaceHolder("UserName or Email doesn't exist!!")
+    );
+
+    return GetUserResponse.builder()
+            .userId(userById.getUserId())
+            .userName(userById.getUserName())
+            .firstName(userById.getFirstName())
+            .lastName(userById.getLastName())
+            .email(userById.getEmail())
+            .roles(userById.getRoles())
             .build();
   }
 

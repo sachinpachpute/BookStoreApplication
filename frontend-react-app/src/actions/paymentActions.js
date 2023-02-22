@@ -13,7 +13,6 @@ import { getErrorMessage } from '../service/CommonUtils';
 import { getAllPaymentMethodsApi, savePaymentMethodApi } from '../service/RestApiCalls';
 
 export const savePaymentMethodAction = (cardRequestBody) => async (dispatch) => {
-  alert("savePaymentMethodAction");
   try {
     dispatch(paymentMethodAddRequest());
 

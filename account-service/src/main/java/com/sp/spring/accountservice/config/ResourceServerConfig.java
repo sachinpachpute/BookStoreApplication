@@ -23,7 +23,7 @@ public class ResourceServerConfig {
                         .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
         );
         http.authorizeHttpRequests()
-                //.requestMatchers("/**").permitAll()
+                .requestMatchers("/**").permitAll()
                 .requestMatchers("/userInfo").permitAll()
                 /*.requestMatchers("/services").hasAuthority("SCOPE_services:read")*/
                 .anyRequest().authenticated();
