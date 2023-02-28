@@ -71,47 +71,49 @@ const PaymentScreen = ({ history }) => {
           ) : (
             <>
               <h2>Select Payment Method</h2>
-              {paymentMethods.map((a) => (
-                <>
-                  <ListGroup.Item variant='flush'>
-                    <InputGroup>
-                      <Col md={1}>
-                        <Form.Check
-                          type='radio'
-                          id={a.paymentMethodId}
-                          value={paymentMethodId}
-                          name='paymentMethod'
-                          checked={a.paymentMethodId === paymentMethodId}
-                          onChange={(e) => {
-                            console.log(a.paymentMethodId);
-                            setPaymentMethodId(a.paymentMethodId);
-                          }}
-                        ></Form.Check>
-                      </Col>
-                      <Col>
-                        <div
-                          className='p-2'
-                          style={{
-                            whiteSpace: 'pre-wrap',
-                            backgroundColor: '#eeeeee'
-                          }}
-                          onClick={(e) => {
-                            console.log(a.paymentMethodId);
-                            setPaymentMethodId(a.paymentMethodId);
-                          }}
-                        >
-                          <p className='m-0' style={{ textTransform: 'uppercase' }}>
-                            {a.cardType}
-                          </p>
-                          <p className='m-0'>
-                            **** **** **** {a.cardLast4Digits} - {a.cardExpirationMonth} / {a.cardExpirationYear}
-                          </p>
-                        </div>
-                      </Col>
-                    </InputGroup>
-                  </ListGroup.Item>
-                </>
-              ))}
+              {React.Children.toArray(
+                  paymentMethods.map((a) => (
+                    <>
+                      <ListGroup.Item key={a.paymentMethodId} variant='flush'>
+                        <InputGroup>
+                          <Col md={1}>
+                            <Form.Check
+                              type='radio'
+                              id={a.paymentMethodId}
+                              value={paymentMethodId}
+                              name='paymentMethod'
+                              checked={a.paymentMethodId === paymentMethodId}
+                              onChange={(e) => {
+                                console.log(a.paymentMethodId);
+                                setPaymentMethodId(a.paymentMethodId);
+                              }}
+                            ></Form.Check>
+                          </Col>
+                          <Col>
+                            <div
+                              className='p-2'
+                              style={{
+                                whiteSpace: 'pre-wrap',
+                                backgroundColor: '#eeeeee'
+                              }}
+                              onClick={(e) => {
+                                console.log(a.paymentMethodId);
+                                setPaymentMethodId(a.paymentMethodId);
+                              }}
+                            >
+                              <p className='m-0' style={{ textTransform: 'uppercase' }}>
+                                {a.cardType}
+                              </p>
+                              <p className='m-0'>
+                                **** **** **** {a.cardLast4Digits} - {a.cardExpirationMonth} / {a.cardExpirationYear}
+                              </p>
+                            </div>
+                          </Col>
+                        </InputGroup>
+                      </ListGroup.Item>
+                    </>
+                  ))
+                )}
             </>
           )}
         </Col>
