@@ -150,7 +150,8 @@ export const uploadImageApi = async (axiosConfig, formData) => {
 };
 
 export const addToCartApi = async (addToCartRequestBody) => {
-alert("inside RestApiCalls:addToCartApi");
+  //alert("inside addToCartApi");
+
   const axiosConfig = getAxiosConfig();
   const responseData = axios
     .post(`${BACKEND_API_GATEWAY_URL}/api/order/cart/cartItem`, addToCartRequestBody, axiosConfig)
@@ -211,6 +212,14 @@ export const putUserInfoApi = async (userInfoRequestBody) => {
   return responseData;
 };
 
+export const getOrderApi = async (orderId) => {
+  const axiosConfig = getAxiosConfig();  
+  const responseData = axios.get(`${BACKEND_API_GATEWAY_URL}/api/order/order/${orderId}`, axiosConfig).then((response) => {
+    return response.data;
+  });
+  return responseData;
+};
+
 export const saveAddressApi = async (addressRequestBody) => {
   const axiosConfig = getAxiosConfig();
   const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/billing/address`, addressRequestBody, axiosConfig).then((response) => {
@@ -246,6 +255,24 @@ export const savePaymentMethodApi = async (cardRequestBody) => {
 export const getAllPaymentMethodsApi = async () => {
   const axiosConfig = getAxiosConfig();
   const responseData = axios.get(`${BACKEND_API_GATEWAY_URL}/api/payment/paymentMethod`, axiosConfig).then((response) => {
+    return response.data;
+  });
+  return responseData;
+};
+
+export const previewOrderApi = async (previewOrderRequestBody) => {
+  const axiosConfig = getAxiosConfig();
+  const responseData = axios
+    .post(`${BACKEND_API_GATEWAY_URL}/api/order/previewOrder`, previewOrderRequestBody, axiosConfig)
+    .then((response) => {
+      return response.data;
+    });
+  return responseData;
+};
+
+export const placeOrderApi = async (placeOrderRequestBody) => {
+  const axiosConfig = getAxiosConfig();
+  const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/order/order`, placeOrderRequestBody, axiosConfig).then((response) => {
     return response.data;
   });
   return responseData;

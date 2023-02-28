@@ -47,16 +47,16 @@ public class PaymentsServiceImpl implements PaymentsService {
             PaymentIntent paymentIntent = PaymentIntent.create(params);
             CreatePaymentResponse createPaymentResponse = new CreatePaymentResponse();
 
-            Charge paidRecord = paymentIntent.getLatestChargeObject();
+            //Charge paidRecord = paymentIntent.getLatestChargeObject();
 
-            //Optional<Charge> paidRecord = paymentIntent.getCharges().getData().stream().filter(Charge::getPaid).findAny();
+            Optional<Charge> paidRecord = paymentIntent.getCharges().getData().stream().filter(Charge::getPaid).findAny();
 
             if (paidRecord != null) {
-                createPaymentResponse.setPaymentId(paidRecord.getId());
-                LocalDateTime paymentTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(paidRecord.getCreated()), TimeZone.getDefault().toZoneId());
+                createPaymentResponse.setPaymentId(paidRecord.get().getId());
+                LocalDateTime paymentTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(paidRecord.get().getCreated()), TimeZone.getDefault().toZoneId());
                 createPaymentResponse.setPaymentDate(paymentTime);
                 createPaymentResponse.setCaptured(true);
-                createPaymentResponse.setReceipt_url(paidRecord.getReceiptUrl());
+                createPaymentResponse.setReceipt_url(paidRecord.get().getReceiptUrl());
                 return createPaymentResponse;
             } else {
                 createPaymentResponse.setCaptured(false);

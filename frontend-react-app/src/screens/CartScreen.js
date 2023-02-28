@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap';
@@ -26,14 +26,19 @@ const CartScreen = (props) => {
   //const redirect = location.search ? location.search.split('=')[1] : '/'
   const redirect = location.pathname + location.search;
 
+  const lockUseEffect = useRef(true);
   useEffect(() => {
     if (userInfo === null || userInfo === undefined) {
       //props.history.push(`/login?redirect=${redirect}`);
       navigateLog(`/login?redirect=${redirect}`);
       return;
     }
-    if (productId) {      
-      addToCart(productId, qty);
+    if (productId) {
+      if (lockUseEffect.current) {
+        lockUseEffect.current = false;
+        console.log('i fire once **************************');
+        addToCart(productId, qty);
+      }
     } else {
       getCartDetail();
     }
@@ -41,10 +46,9 @@ const CartScreen = (props) => {
 
   const addToCart = (pId, q) => {  
     const addToCartRequestBody = {
-      productId: pId || productId,
-      quantity: q || qty
+      productId: pId,
+      quantity: q
     };
-    alert("inside CartScreen:addToCart");
     dispatch(addToCartAction(addToCartRequestBody));
   };
 

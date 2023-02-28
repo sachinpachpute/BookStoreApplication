@@ -41,6 +41,7 @@ export const tempProductsAction = (pageNumber) => async (dispatch) => {
 
 export const addToCartAction = (addToCartRequestBody) => async (dispatch) => {
   try {
+    //alert("inside addToCartAction");
     dispatch(cartAddItemRequest());
     //alert("inside addToCartAction:addToCartApi");
     await addToCartApi(addToCartRequestBody);

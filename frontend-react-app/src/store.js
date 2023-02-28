@@ -52,7 +52,7 @@ const store = configureStore({
     orderListAll:orderListAllSlice.reducer,
     orderListMy: orderListMySlice.reducer,
     orderPreview: orderPreviewSlice.reducer,
-    orderDetail: orderDetailsSlice.reducer,
+    orderDetails: orderDetailsSlice.reducer,
     orderCreate: orderCreateSlice.reducer,
 
     cart: cartDetailSlice.reducer,
