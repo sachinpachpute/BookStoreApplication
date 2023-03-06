@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AUTHORIZATION_SERVER_BASE_URL, CLIENT_ID, REDIRECT_URI } from '../constants/appConstants';
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { generateCodeChallenge, generateCodeVerifier } from '../components/Pkce';
 import { login } from '../actions/userActions';
@@ -11,24 +11,33 @@ import qs from 'qs';
 const RedirectScreen = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    // let location = useLocation()
+    // const redirectTo = location.search ? location.search.split('=')[1] : '/'
+    // alert("will redirect to "+redirectTo);
+    
     //alert('codeVerifier in redirect screen : '+sessionStorage.getItem('codeVerifier'));
     if (sessionStorage.getItem('codeVerifier') === null){
         const verifier = generateCodeVerifier();
         sessionStorage.setItem('codeVerifier', verifier);
         const codeChallenge = generateCodeChallenge();
-        //alert('new codeVerifier generated: '+verifier);
+        console.log(verifier);
         sessionStorage.setItem('codeChallenge', codeChallenge);
     } 
     
     const dispatch = useDispatch();
 
+    const lockUseEffect = useRef(true);
+
     useEffect(() => {
         if(searchParams?.get('code')){    
-            const code = searchParams?.get('code');
-            console.log(code);
-            dispatch(login(code));
-      
-            navigate('/');
+            if (lockUseEffect.current) {
+                lockUseEffect.current = false;
+                const code = searchParams?.get('code');
+                console.log(code);
+                dispatch(login(code));
+                //navigate(`${redirectTo}`);
+                navigate('/');
+            }
         }
     }, []);
     useEffect(() => {

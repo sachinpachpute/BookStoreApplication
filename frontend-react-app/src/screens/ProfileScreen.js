@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { listMyOrdersAction } from '../actions/orderActions';
-import { getUserDetailsAction, updateUserProfileAction } from '../actions/userActions';
-import { userUpdateProfileReset } from '../reducers/userSlice';
+import { getUserDetails, updateUserProfile } from '../actions/userActions';
 import FullPageLoader from '../components/FullPageLoader';
 import Message from '../components/Message';
+import { userUpdateProfileReset } from '../reducers/userSlice';
 
 const ProfileScreen = ({ history }) => {
   const [firstName, setFirstName] = useState('');
@@ -30,8 +30,7 @@ const ProfileScreen = ({ history }) => {
 
   const orderListMy = useSelector((state) => state.orderListMy);
   const { error: errorOrderListMy, loading: loadingOrderListMy, orders } = orderListMy;
-
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
   useEffect(() => {
     if (!userInfo) {
@@ -39,7 +38,7 @@ const ProfileScreen = ({ history }) => {
     } else {
       if (!user || !user.userName) {
         dispatch(userUpdateProfileReset());
-        dispatch(getUserDetailsAction());
+        dispatch(getUserDetails());
       } else {
         setFirstName(user.firstName);
         setLastName(user.lastName);
@@ -55,7 +54,7 @@ const ProfileScreen = ({ history }) => {
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
     } else {
-      dispatch(updateUserProfileAction({ firstName, lastName, email, password }));
+      dispatch(updateUserProfile({ firstName, lastName, email, password }));
     }
   };
 

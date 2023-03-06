@@ -1,4 +1,4 @@
-import {configureStore } from '@reduxjs/toolkit';
+import {configureStore, createSlice } from '@reduxjs/toolkit';
 import logger from 'redux-logger'
 import { 
   productListSlice,
@@ -39,6 +39,33 @@ import{
 
 import ToastMiddleware from './middlewares/ToastMiddleware';
 
+export const rootReducerSlice = createSlice({
+    name:'rootReducer',
+    initialState: {
+      state: {},
+    },
+    reducers: {
+      userLogout: (state, action) => {
+        console.log('Logout Root Reducer');
+        state = {};
+      }
+    }
+});
+
+const userInfoFromStorage = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null;
+const billingAddressId = localStorage.getItem('billingAddressId') ? localStorage.getItem('billingAddressId') : null;
+const shippingAddressId = localStorage.getItem('shippingAddressId') ? localStorage.getItem('shippingAddressId') : null;
+const paymentMethodId = localStorage.getItem('paymentMethodId') ? localStorage.getItem('paymentMethodId') : null;
+
+const initialState = {
+  userLogin: { userInfo: userInfoFromStorage },
+  order: {
+    billingAddressId,
+    shippingAddressId,
+    paymentMethodId
+  }
+};
+
 const store = configureStore({ 
   reducer:{
     productList: productListSlice.reducer,
@@ -70,8 +97,15 @@ const store = configureStore({
 
     paymentMethodSave: paymentMethodSaveSlice.reducer,
     paymentMethodListMy: paymentMethodListSlice.reducer,
+
+    rootReducer: rootReducerSlice.reducer,
   },
+  preloadState: initialState,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger, ToastMiddleware),
-})
+});
+
+
+
+
 
 export default store;

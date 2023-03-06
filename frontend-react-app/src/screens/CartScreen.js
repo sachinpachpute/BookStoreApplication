@@ -7,6 +7,7 @@ import CartItem from '../components/CartItem';
 import { addToCartAction, getCartDetailsAction } from '../actions/cartActions';
 import FullPageLoader from '../components/FullPageLoader';
 import { LinkContainer } from 'react-router-bootstrap';
+import { userLogout } from '../reducers/userSlice';
 
 const CartScreen = (props) => {
   const { id } = useParams();
@@ -23,14 +24,15 @@ const CartScreen = (props) => {
   let loading = cartState.loading;
   let error = cartState.error;
   const { userInfo } = userLogin;
-  //const redirect = location.search ? location.search.split('=')[1] : '/'
+  //const redirect = location.search ? location.search.split('=')[1] : '/'  
   const redirect = location.pathname + location.search;
 
   const lockUseEffect = useRef(true);
   useEffect(() => {
     if (userInfo === null || userInfo === undefined) {
       //props.history.push(`/login?redirect=${redirect}`);
-      navigateLog(`/login?redirect=${redirect}`);
+      navigateLog(`/redirect?redirect=${redirect}`);
+      //navigateLog(`/redirect`);
       return;
     }
     if (productId) {

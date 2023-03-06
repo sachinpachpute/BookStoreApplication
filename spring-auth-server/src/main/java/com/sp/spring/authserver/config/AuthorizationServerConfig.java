@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -74,6 +75,11 @@ public class AuthorizationServerConfig {
                 .authorizationEndpoint(
                         a -> a.authenticationProviders(getAuthorizationEndpointProviders())
                 )
+                /*.tokenRevocationEndpoint(tokenRevocationEndpoint -> tokenRevocationEndpoint
+                        .revocationResponseHandler((request, response, authentication) -> {
+                            //delete session here
+                            response.setStatus(HttpStatus.OK.value());
+                        }))*/
                 //Validation for token endpoint
                 /*.tokenEndpoint(
                         a -> a.accessTokenRequestConverters()
@@ -100,23 +106,6 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    @Order(2)
-    public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.formLogin()
-                .loginPage("/login")
-                //.permitAll()
-                .and()
-                .logout()
-                .deleteCookies("JSESSIONID", "JWT")
-                .logoutSuccessUrl("/")
-                .clearAuthentication(true)
-                .invalidateHttpSession(true);
-
-        return http.build();
-    }
-
-
-    @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -140,7 +129,7 @@ public class AuthorizationServerConfig {
                         .requireAuthorizationConsent(true).build())*/
                 .tokenSettings(
                         TokenSettings.builder()
-                                .accessTokenTimeToLive(Duration.ofSeconds(900))
+                                .accessTokenTimeToLive(Duration.ofSeconds(60))
                                 .build()
                 )
                 .build();
@@ -190,31 +179,27 @@ public class AuthorizationServerConfig {
         };
     }
 
-    /*    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                // ...
-                .and()
-                .formLogin()
-                .loginPage("/login.html")
-                .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/homepage.html", true)
-                .failureUrl("/login.html?error=true")
-                .failureHandler(authenticationFailureHandler())
+    /*@Bean
+    @Order(2)
+    public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.formLogin()
+                .loginPage("/login")
+                //.permitAll()
                 .and()
                 .logout()
-                .logoutUrl("/perform_logout")
-                .deleteCookies("JSESSIONID")
-                .logoutSuccessHandler(logoutSuccessHandler());
+                .deleteCookies("JSESSIONID", "JWT")
+                .logoutSuccessUrl("/")
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers("/**").permitAll()
+                .requestMatchers("/userInfo").permitAll()
+                *//*.requestMatchers("/services").hasAuthority("SCOPE_services:read")*//*
+                .anyRequest().authenticated();
+
         return http.build();
-
-        loginPage() – the custom login page
-        loginProcessingUrl() – the URL to submit the username and password to
-        defaultSuccessUrl() – the landing page after a successful login
-        failureUrl() – the landing page after an unsuccessful login
-        logoutUrl() – the custom logout
     }*/
-
 
     //By creating a AppUserDetailsService class and adding @Service annotation on it, we have created
     //a Bean for UserDetailsService. We can now remove following InMemoryUserDetailsManager bean.

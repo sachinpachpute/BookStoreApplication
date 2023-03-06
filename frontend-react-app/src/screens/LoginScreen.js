@@ -36,6 +36,7 @@ const LoginScreen = (props) => {
   }, [navigateLog, userInfo, redirect])
 
   const loginSubmitHandler = (e) => {
+    alert("login submit handler");
     e.preventDefault();
     dispatch(login(userNameOrEmail, password));
   };

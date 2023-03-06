@@ -1,6 +1,6 @@
 package com.sp.spring.orderservice.service.impl;
 
-import com.sp.spring.feignclient.feign.AccountFeignClient;
+import com.sp.spring.feignclient.feign.AuthServerFeignClient;
 import com.sp.spring.feignclient.feign.CatalogFeignClient;
 import com.sp.spring.feignclient.web.GetProductResponse;
 import com.sp.spring.orderservice.repository.CartItemRepository;
@@ -31,7 +31,7 @@ public class CartItemServiceImpl implements CartItemService {
     CartItemRepository cartItemRepository;
 
     @Autowired
-    AccountFeignClient accountFeignClient;
+    AuthServerFeignClient authServerFeignClient;
 
     @Override
     public void addCartItem(CartItemRequest cartItemRequest) {

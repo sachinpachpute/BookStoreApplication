@@ -24,6 +24,11 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+  security:
+    jwt:
+      issuer-uri: http://auth-server:3001/oauth2/jwks
+      public-key: classpath:jwt-signing-public-key.txt
+
 eureka:
   client:
     serviceUrl:

@@ -1,7 +1,7 @@
 package com.sp.spring.payment.service.impl;
 
 import com.sp.spring.common.exception.RunTimeExceptionPlaceHolder;
-import com.sp.spring.feignclient.feign.AccountFeignClient;
+import com.sp.spring.feignclient.feign.AuthServerFeignClient;
 import com.sp.spring.feignclient.web.GetProductResponse;
 import com.sp.spring.feignclient.web.GetUserResponse;
 import com.sp.spring.payment.repository.UserPaymentCustomerRepository;
@@ -35,7 +35,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     private UserPaymentCustomerRepository userPaymentCustomerRepository;
 
     @Autowired
-    AccountFeignClient accountFeignClient;
+    AuthServerFeignClient authServerFeignClient;
 
     public PaymentMethodServiceImpl() {
     }
@@ -46,7 +46,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userIdFromToken = getUserIdFromToken(authentication);
 
-        GetUserResponse userResponse = accountFeignClient.getUserByUserName(userIdFromToken);
+        GetUserResponse userResponse = authServerFeignClient.getUserByUserName(userIdFromToken);
         String userName = userResponse.getFirstName()+" "+userResponse.getLastName();
 
         UserPaymentCustomer paymentCustomer = userPaymentCustomerRepository.findByUserId(userIdFromToken);

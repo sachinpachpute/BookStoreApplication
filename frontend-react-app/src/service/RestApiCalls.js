@@ -1,10 +1,28 @@
 import { BACKEND_API_GATEWAY_URL, CLIENT_ID, REDIRECT_URI, AUTHORIZATION_SERVER_BASE_URL } from '../constants/appConstants';
 import axios from 'axios';
 import qs from 'qs';
+import store from '../store';
+import { userLogout } from '../reducers/userSlice';
+
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Prevent infinite loops
+    if (error.response.status === 401) {
+      localStorage.clear();
+      store.dispatch(userLogout());
+      //return Promise.reject(error);
+    }
+    // specific error handling done elsewhere
+    return Promise.reject(error);
+  }
+);
 
 export const postSignupApi = (singupRequestBody) => {
   const axiosConfig = getAxiosConfig();
-  const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/account/signup`, singupRequestBody, axiosConfig).then((response) => {
+  const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/auth/signup`, singupRequestBody, axiosConfig).then((response) => {
     return response.data;
   });
   return responseData;
@@ -35,7 +53,6 @@ export const getAccessToken = async (code) => {
   //-----------------------------------------------------------
 //alert('postLoginApi:code verifier before authorize call: ' + sessionStorage.getItem(('codeVerifier')));
 //alert('postLoginApi: code challenge before authorize call: ' + sessionStorage.getItem(('codeChallenge')));
-
   const params = {
     grant_type: 'authorization_code',
     redirect_uri: REDIRECT_URI,
@@ -64,7 +81,7 @@ export const getAccessToken = async (code) => {
 export const getUserInfoApi = async () => {
   const axiosConfig = getAxiosConfig();
   alert('access token : '+JSON.parse(localStorage.getItem('userInfo'))?.token)  ;
-    const responseData = await axios.get(`${BACKEND_API_GATEWAY_URL}/api/account/userInfo`, axiosConfig).then((response) => {
+    const responseData = await axios.get(`${BACKEND_API_GATEWAY_URL}/api/auth/userInfo`, axiosConfig).then((response) => {
     return response.data;
   });
   return responseData;
@@ -204,8 +221,9 @@ export const getUserApi = async (userId) => {
 
 export const putUserInfoApi = async (userInfoRequestBody) => {
   const axiosConfig = getAxiosConfig();
+  alert(userInfoRequestBody);
   const responseData = await axios
-    .put(`${BACKEND_API_GATEWAY_URL}/api/account/userInfo`, userInfoRequestBody, axiosConfig)
+    .put(`${BACKEND_API_GATEWAY_URL}/api/auth/userInfo`, userInfoRequestBody, axiosConfig)
     .then((response) => {
       return response.data;
     });

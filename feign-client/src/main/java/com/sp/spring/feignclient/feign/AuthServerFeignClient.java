@@ -6,8 +6,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("account-service")
-public interface AccountFeignClient {
+@FeignClient("auth-server")
+public interface AuthServerFeignClient {
 
     @GetMapping("/user")
     GetUserResponse getUserByUserName(@RequestParam("userName") String userName);

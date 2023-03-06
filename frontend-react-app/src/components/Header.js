@@ -4,13 +4,48 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { isAdmin } from '../service/CommonUtils';
 import { logout } from '../actions/userActions';
+import { useEffect } from 'react';
 
 
 
 const Header = (props) => {
+  //alert("inside header");
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    if (userInfo) {
+      const decodedJwt = parseJwt(userInfo.token);
+      //alert("Epiry: "+decodedJwt.exp);
+      if (decodedJwt.exp * 1000 < Date.now()) {
+        logoutHandler();
+      }
+    }
+  }, [userInfo]);
+
+  // const parseJwt = (token) => {
+  //   try {
+  //     return JSON.parse(atob(token.split(".")[1]));
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // };
+
+  // if (userInfo) {
+  //   const decodedJwt = parseJwt(userInfo.token);
+  //   //alert("Epiry: "+decodedJwt.exp);
+  //   if (decodedJwt.exp * 1000 < Date.now()) {
+  //     alert("call logout");
+  //   }
+  // }
   //alert('userLogin '+userLogin);
   //alert('userLogin.userInfo '+userLogin.userInfo);
   

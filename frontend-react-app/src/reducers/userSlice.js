@@ -20,7 +20,7 @@ export const userLoginSlice = createSlice({
       userLogout: (state, action) => {     
         localStorage.clear();
         sessionStorage.clear();
-        window.location.href = '/login';        
+        window.location.href = '/';        
         state = {};   
       },
     }
@@ -55,29 +55,29 @@ export const userRegisterSlice = createSlice({
   }
 });
 
-export const userUpdateProfileSlice = createSlice({
-  name:'userUpdateProfile',
-  initialState: {
-    state: {},
-  },
-  reducers: {
-    userUpdateProfileRequest: (state, action) => {
-      state.loading = true;
-    },
-    userUpdateProfileSuccess: (state, action) => {
-      state.loading = false;
-      state.success = true;
-      state.userInfo = action.payload;
-    },
-    userUpdateProfileFail: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    userUpdateProfileReset: (state, action) => {
-      state = {};
-    },
-  }
-});
+// export const userUpdateProfileSlice = createSlice({
+//   name:'userUpdateProfile',
+//   initialState: {
+//     state: {},
+//   },
+//   reducers: {
+//     userUpdateProfileRequest: (state, action) => {
+//       state.loading = true;
+//     },
+//     userUpdateProfileSuccess: (state, action) => {
+//       state.loading = false;
+//       state.success = true;
+//       state.userInfo = action.payload;
+//     },
+//     userUpdateProfileFail: (state, action) => {
+//       state.loading = false;
+//       state.error = action.payload;
+//     },
+//     userUpdateProfileReset: (state, action) => {
+//       state = {};
+//     },
+//   }
+// });
 
 export const userDetailsSlice = createSlice({
   name:'userDetails',
@@ -99,7 +99,31 @@ export const userDetailsSlice = createSlice({
   }
 });
 
+export const userUpdateProfileSlice = createSlice({
+  name:'updateUserProfile',
+  initialState: {
+    state: {},
+  },
+  reducers: {
+    userUpdateProfileRequest: (state, action) => {
+      state.loading = true;
+    },
+    userUpdateProfileSuccess: (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.userInfo = action.payload;
+    },
+    userUpdateProfileFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    userUpdateProfileReset: (state, action) => {
+      state = {};
+    }
+  }
+});
+
 export const { userLoginRequest, userLoginSuccess, userLoginFail, userLogout } = userLoginSlice.actions;
 export const { userRegisterRequest, userRegisterSuccess, userRegisterFail, userRegisterLogout } = userRegisterSlice.actions;
-export const { userUpdateProfileRequest, userUpdateProfileSuccess, userUpdateProfileFail, userUpdateProfileReset } = userUpdateProfileSlice.actions;
 export const { userDetailsRequest, userDetailsSuccess, userDetailsFail } = userDetailsSlice.actions;
+export const { userUpdateProfileRequest, userUpdateProfileSuccess, userUpdateProfileFail, userUpdateProfileReset } = userUpdateProfileSlice.actions;

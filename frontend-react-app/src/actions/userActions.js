@@ -32,9 +32,7 @@ export const login = (code) => async (dispatch) => {
 
     //Login
     const loginResponse = await getAccessToken(code);
-    
-    //alert("now printing loginReponse");
-    console.log(loginResponse);
+ 
     //alert("now printing loginReponse.access_token");
     console.log(loginResponse.access_token);
     
@@ -138,7 +136,7 @@ export const register = (userName, firstName, email, password) => async (dispatc
   }
 };
 
-export const getUserDetailsAction = (userId) => async (dispatch) => {
+export const getUserDetails = (userId) => async (dispatch) => {
   try {
     dispatch(userDetailsRequest());
     //Get User Detail
@@ -152,6 +150,28 @@ export const getUserDetailsAction = (userId) => async (dispatch) => {
     dispatch(userDetailsSuccess(userInfoResponse));
   } catch (error) {
     dispatch(userDetailsFail(getErrorMessage(error)));
+  }
+};
+
+export const updateUserProfile = (user) => async (dispatch) => {
+  try {
+    dispatch(userUpdateProfileRequest());
+
+    //Update userInfo
+    await putUserInfoApi(user);
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+    const updatedUserInfo = {
+      ...userInfo,
+      ...user
+    };
+
+    dispatch(userUpdateProfileSuccess(updatedUserInfo));
+
+    localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+  } catch (error) {
+    dispatch(userUpdateProfileFail(getErrorMessage(error)));
   }
 };
 
