@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BACKEND_API_GATEWAY_URL } from '../constants/appConstants';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,10 +28,12 @@ const ProductCreateScreen = ({ match, history }) => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
+  let navigateLog = useNavigate()
+
   useEffect(() => {
     async function fetchData() {
-      await getProductCategories().then((res) => {
-        setProductCategories(res.page.content);
+      await getProductCategories().then((res) => {       
+        setProductCategories(res.content);
       });
     }
     fetchData();
@@ -71,7 +74,8 @@ const ProductCreateScreen = ({ match, history }) => {
         productCategoryId: productCategory
       })
     );
-    history.push('/admin/productlist');
+    //history.push('/admin/productlist');
+    navigateLog(`/admin/productlist`);
   };
 
   useEffect(() => {

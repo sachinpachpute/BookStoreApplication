@@ -80,7 +80,7 @@ export const getAccessToken = async (code) => {
 
 export const getUserInfoApi = async () => {
   const axiosConfig = getAxiosConfig();
-  alert('access token : '+JSON.parse(localStorage.getItem('userInfo'))?.token)  ;
+  //alert('access token : '+JSON.parse(localStorage.getItem('userInfo'))?.token)  ;
     const responseData = await axios.get(`${BACKEND_API_GATEWAY_URL}/api/auth/userInfo`, axiosConfig).then((response) => {
     return response.data;
   });
@@ -95,6 +95,7 @@ export const getAllProductsDetailApi = async (pageNumber) => {
 };
 
 export const getProductDetailApi = async (productId) => {
+  //alert("calling get product detail api");
   const responseData = axios.get(`${BACKEND_API_GATEWAY_URL}/api/catalog/product/${productId}`).then((response) => {
     return response.data;
   });
@@ -118,6 +119,7 @@ export const updateProductDetailApi = async (productReqBody) => {
 };
 
 export const getImageApi = async (imageId) => {
+  //alert(imageId);
   //const axiosConfig = getAxiosConfig();
   //const responseData = axios.get(`${BACKEND_API_GATEWAY_URL}/api/catalog/image/${imageId}`, axiosConfig).then((response) => {
     const responseData = axios.get(`${BACKEND_API_GATEWAY_URL}/api/catalog/image/${imageId}`).then((response) => {
@@ -221,7 +223,7 @@ export const getUserApi = async (userId) => {
 
 export const putUserInfoApi = async (userInfoRequestBody) => {
   const axiosConfig = getAxiosConfig();
-  alert(userInfoRequestBody);
+  //alert(userInfoRequestBody);
   const responseData = await axios
     .put(`${BACKEND_API_GATEWAY_URL}/api/auth/userInfo`, userInfoRequestBody, axiosConfig)
     .then((response) => {

@@ -11,6 +11,7 @@ import com.sp.spring.catalog.repository.dao.ProductReview;
 import com.sp.spring.catalog.service.ProductService;
 import com.sp.spring.catalog.service.ReviewService;
 import com.sp.spring.catalog.web.ProductResponse;
+import com.sp.spring.catalog.web.UpdateProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +42,27 @@ public class ProductServiceImpl implements ProductService {
     ObjectMapper objectMapper;
 
     @Override
+    public String createProduct(@Valid CreateProductRequest createProductRequest) {
+
+        Optional<ProductCategory> productCategoryOptional =
+                productCategoryRepository.findById(createProductRequest.getProductCategoryId());
+
+        ProductCategory productCategory = productCategoryOptional.orElseThrow(() -> new RuntimeException("ProductCategory doesn't exist!"));
+
+        Product product = Product.builder()
+                .productName(createProductRequest.getProductName())
+                .description(createProductRequest.getDescription())
+                .availableItemCount(createProductRequest.getAvailableItemCount())
+                .price(createProductRequest.getPrice())
+                .productCategory(productCategory)
+                .imageId(createProductRequest.getImageId())
+                .build();
+
+        Product savedProduct = productRepository.save(product);
+        return savedProduct.getProductId();
+    }
+
+    @Override
     public ProductResponse getProduct(String productId) {
         Optional<Product> productOptional =
                 productRepository.findById(productId);
@@ -62,24 +84,60 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String createProduct(@Valid CreateProductRequest createProductRequest) {
+    public void deleteProduct(String productId) {
 
-        Optional<ProductCategory> productCategoryOptional =
-                productCategoryRepository.findById(createProductRequest.getProductCategoryId());
+        productRepository.deleteById(productId);
 
-        ProductCategory productCategory = productCategoryOptional.orElseThrow(() -> new RuntimeException("ProductCategory doesn't exist!"));
+    }
 
-        Product product = Product.builder()
-                .productName(createProductRequest.getProductName())
-                .description(createProductRequest.getDescription())
-                .availableItemCount(createProductRequest.getAvailableItemCount())
-                .price(createProductRequest.getPrice())
-                .productCategory(productCategory)
-                .imageId(createProductRequest.getImageId())
-                .build();
+    @Override
+    public void updateProduct(UpdateProductRequest updateProductRequest) {
 
-        Product savedProduct = productRepository.save(product);
-        return savedProduct.getProductId();
+        Optional<Product> productOptional =
+                productRepository.findById(updateProductRequest.getProductId());
+
+        //check weather product exists
+        final Product productExisting = productOptional.orElseThrow(() -> new RuntimeException("Product Id doesn't exist!"));
+
+        productExisting.setProductId(updateProductRequest.getProductId());
+
+        if (updateProductRequest.getProductName() != null) {
+            productExisting.setProductName(updateProductRequest.getProductName());
+        }
+
+        if (updateProductRequest.getDescription() != null) {
+            productExisting.setDescription(updateProductRequest.getDescription());
+        }
+
+        if (updateProductRequest.getPrice() != null) {
+            productExisting.setPrice(updateProductRequest.getPrice());
+        }
+
+        if (updateProductRequest.getImageId() != null) {
+            productExisting.setImageId(updateProductRequest.getImageId());
+        }
+
+        if (updateProductRequest.getProductCategoryId() != null) {
+            Optional<ProductCategory> productCategoryOptional =
+                    productCategoryRepository.findById(updateProductRequest.getProductCategoryId());
+
+            //check weather product category exists
+            ProductCategory productCategory = productCategoryOptional.orElseThrow(() -> new RuntimeException("ProductCategory doesn't exist!"));
+            productExisting.setProductCategory(productCategory);
+        }
+
+        if (updateProductRequest.getAvailableItemCount() != null) {
+            productExisting.setAvailableItemCount(updateProductRequest.getAvailableItemCount());
+        }
+
+        productExisting.setCreatedAt(productExisting.getCreatedAt());
+
+        productRepository.save(productExisting);
+    }
+
+    @Override
+    public Page<Product> findAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override

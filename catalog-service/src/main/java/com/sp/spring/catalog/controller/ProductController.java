@@ -3,10 +3,12 @@ package com.sp.spring.catalog.controller;
 import com.sp.spring.catalog.service.ProductService;
 import com.sp.spring.catalog.web.CreateProductRequest;
 import com.sp.spring.catalog.web.ProductResponse;
+import com.sp.spring.catalog.web.UpdateProductRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -53,6 +55,15 @@ public class ProductController {
         Page<ProductResponse> list = productService.getAllProducts(sort, page, size);
 
         return ResponseEntity.ok(list);
+    }
+
+    @PutMapping("/product")
+    //@PreAuthorize("hasAuthority('ADMIN_USER')")
+    public ResponseEntity<?> updateProduct(@RequestBody @Valid UpdateProductRequest updateProductRequest) {
+
+        productService.updateProduct(updateProductRequest);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

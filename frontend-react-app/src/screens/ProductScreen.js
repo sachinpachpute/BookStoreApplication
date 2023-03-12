@@ -38,28 +38,32 @@ const ProductScreen = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-      await getProductDetailApi(Number(id)).then((r) => {
+      await getProductDetailApi(id).then((r) => {
+        //alert("setting a product");
+        console.log(r);
         setProduct(r);
       });
-      dispatch(listProductReviewsAction(Number(id)));
-      // if (product?.imageId) {
-      await getImageApi(product?.imageId).then((r) => {
-        setProductimageBase64(r);
-      });     
+      dispatch(listProductReviewsAction(id));
+      if (product?.imageId) {
+        await getImageApi(product?.imageId).then((r) => {
+          //alert("calling getImageApi")
+          setProductimageBase64(r);
+        });
+      }
     }
     fetchData();
   }, [dispatch, product?.imageId]);
 
   let navigate = useNavigate()
   const addToCartHandler = () => {
-    navigate(`/cart/${Number(id)}?qty=${qty}`);
+    navigate(`/cart/${id}?qty=${qty}`);
   };
 
   const createProductReviewHandler = (e) => {
     e.preventDefault();    
     dispatch(
       createProductReviewAction({ 
-        productId: Number(id),
+        productId: id,
         ratingValue: rating,
         reviewMessage: reviewMessage
       })

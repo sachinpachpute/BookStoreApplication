@@ -11,7 +11,7 @@ import { userLogout } from '../reducers/userSlice';
 
 const CartScreen = (props) => {
   const { id } = useParams();
-  const productId = Number(id);
+  const productId = id;
 
   let navigateLog = useNavigate()
   let location = useLocation()
