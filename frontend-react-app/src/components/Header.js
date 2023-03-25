@@ -6,8 +6,6 @@ import { isAdmin } from '../service/CommonUtils';
 import { logout } from '../actions/userActions';
 import { useEffect } from 'react';
 
-
-
 const Header = (props) => {
   //alert("inside header");
   const userLogin = useSelector((state) => state.userLogin);

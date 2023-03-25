@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: AUTH-SERVER
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
   jpa:
     database: mysql
     open-in-view: true
@@ -18,9 +20,9 @@ spring:
         format_sql: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bookstore_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: root
-    password: PaSSworD
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/bookstore_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:PaSSworD}
   main:
     allow-bean-definition-overriding: true
 

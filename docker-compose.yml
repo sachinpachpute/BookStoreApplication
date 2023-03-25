@@ -1,0 +1,181 @@
+version: "3.8"
+
+services:
+
+  # Database
+  store-mysql-db:
+    image: mysql:8.0
+    container_name: store-mysql-db
+    hostname: store-mysql-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'bookstore_db'
+      MYSQL_USER: 'bookstoreDBA'
+      MYSQL_PASSWORD: 'PaSSworD'
+      MYSQL_ROOT_PASSWORD: 'r00tPaSSworD'
+    ports:
+      - "3307:3306"
+    expose:
+      - "3307"
+    volumes:
+      - store-db-volume:/var/lib/mysql
+    networks:
+      - store-app-network
+
+  eureka-discovery-server:
+    build:
+      context: ./eureka-discovery-service
+      args:
+        JAR_FILE: eureka-discovery-service-0.0.1-SNAPSHOT.jar
+      dockerfile: Dockerfile
+    image: eureka-discovery-server
+    container_name: eureka-discovery-server
+    hostname: eureka-discovery-server
+    ports:
+      - "8761:8761"
+    networks:
+      - store-app-network
+    environment:
+      - SERVER_PORT=8761
+      - SPRING_PROFILES_ACTIVE=docker
+
+  spring-cloud-gateway-server:
+    build:
+      context: ./api-gateway-service
+      args:
+        JAR_FILE: api-gateway-service-0.0.1-SNAPSHOT.jar
+      dockerfile: Dockerfile
+    image: api-gateway-server
+    container_name: api-gateway-server
+    hostname: spring-cloud-gateway-server
+    ports:
+      - "8765:8765"
+    networks:
+      - store-app-network
+    environment:
+      - SERVER_PORT=8765
+      - EUREKA_HOST=eureka-discovery-server:8761
+      - SPRING_PROFILES_ACTIVE=docker
+
+  spring-auth-server:
+    build:
+      context: ./spring-auth-server
+      args:
+        JAR_FILE: spring-auth-server-0.0.1-SNAPSHOT.jar
+      dockerfile: Dockerfile
+    image: spring-auth-server
+    container_name: spring-auth-server
+    hostname: spring-auth-server
+    ports:
+      - "3001:3001"
+    networks:
+      - store-app-network
+    environment:
+      - SERVER_PORT=3001
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=store-mysql-db
+      - MYSQL_USER=bookstoreDBA
+      - MYSQL_PASSWORD=PaSSworD
+      - EUREKA_HOST=eureka-discovery-server:8761
+
+  billing-service:
+    build:
+      context: ./billing-service
+      args:
+        JAR_FILE: billing-service-0.0.1-SNAPSHOT.jar
+      dockerfile: Dockerfile
+    image: billing-service
+    container_name: billing-service
+    hostname: billing-service
+    ports:
+      - "5001:5001"
+    networks:
+      - store-app-network
+    environment:
+      - SERVER_PORT=5001
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=store-mysql-db
+      - MYSQL_USER=bookstoreDBA
+      - MYSQL_PASSWORD=PaSSworD
+      - EUREKA_HOST=eureka-discovery-server:8761
+
+  catalog-service:
+    build:
+      context: ./catalog-service
+      args:
+        JAR_FILE: catalog-service-0.0.1-SNAPSHOT.jar
+      dockerfile: Dockerfile
+    image: catalog-service
+    container_name: catalog-service
+    hostname: catalog-service
+    ports:
+      - "6001:6001"
+    networks:
+      - store-app-network
+    environment:
+      - SERVER_PORT=6001
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=store-mysql-db
+      - MYSQL_USER=bookstoreDBA
+      - MYSQL_PASSWORD=PaSSworD
+      - EUREKA_HOST=eureka-discovery-server:8761
+
+
+  order-service:
+    build:
+      context: ./order-service
+      args:
+        JAR_FILE: order-service-0.0.1-SNAPSHOT.jar
+      dockerfile: Dockerfile
+    image: order-service
+    container_name: order-service
+    hostname: order-service
+    ports:
+      - "7001:7001"
+    networks:
+      - store-app-network
+    environment:
+      - SERVER_PORT=7001
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=store-mysql-db
+      - MYSQL_USER=bookstoreDBA
+      - MYSQL_PASSWORD=PaSSworD
+      - EUREKA_HOST=eureka-discovery-server:8761
+
+  payment-service:
+    build:
+      context: ./payment-service
+      args:
+        JAR_FILE: payment-service-0.0.1-SNAPSHOT.jar
+      dockerfile: Dockerfile
+    image: payment-service
+    container_name: payment-service
+    hostname: payment-service
+    ports:
+      - "8001:8001"
+    networks:
+      - store-app-network
+    environment:
+      - SERVER_PORT=8001
+      - SPRING_PROFILES_ACTIVE=docker
+      - MYSQL_HOST=store-mysql-db
+      - MYSQL_USER=bookstoreDBA
+      - MYSQL_PASSWORD=PaSSworD
+      - EUREKA_HOST=eureka-discovery-server:8761
+
+#  # Tracing service
+#  store-zipkin:
+#    image: openzipkin/zipkin
+#    container_name: store-zipkin
+#    hostname: store-zipkin
+#    ports:
+#      - "9411:9411"
+#    networks:
+#      - store-app-network
+#
+volumes:
+  store-db-volume:
+
+networks:
+  store-app-network:
+    driver: bridge
