@@ -32,7 +32,7 @@ const LoginScreen = (props) => {
   useEffect(() => {
     if (userInfo) {
       alert("redirecting");
-      navigateLog(`/${redirect}`);
+      navigateLog(`${redirect}`);
     }
   }, [navigateLog, userInfo, redirect])
 
