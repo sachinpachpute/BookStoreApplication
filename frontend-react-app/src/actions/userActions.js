@@ -21,65 +21,33 @@ import {
   getUserInfoApi,
   getAccessToken,  
   postSignupApi,
+  postLoginApi,
   putUserInfoApi,
   getAllUsersApi,
   getUserApi,
 } from '../service/RestApiCalls';
 
-export const login = (code) => async (dispatch) => {
-  try {
-    dispatch(userLoginRequest());
-
-    //Login
-    const loginResponse = await getAccessToken(code);
- 
-    //alert("now printing loginReponse.access_token");
-    console.log(loginResponse.access_token);
-    
-    //alert(loginResponse.access_token);
-    const userInfo = {
-      token: loginResponse.access_token
-    };
-
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
-    //Get UserInfo
-    const userInfoResponse = await getUserInfoApi();
-    userInfoResponse.token = loginResponse.access_token;
-    //userInfoResponse.refresh_token = loginResponse.refresh_token;
-    
-    dispatch(userLoginSuccess(userInfoResponse));
-  
-  } catch (error) {
-    dispatch(userLoginFail(getErrorMessage(error)));
-  }  
-};
-
-// export const login = (usernameOrEmail, password) => async (dispatch) => {
+// export const login = (code) => async (dispatch) => {
 //   try {
 //     dispatch(userLoginRequest());
 
-//     const loginRequest = {
-//       grant_type: 'password',
-//       username:usernameOrEmail,
-//       password: password
-//     };
-
 //     //Login
-//     const loginResponse = await postLoginApi(loginRequest);
+//     const loginResponse = await getAccessToken(code);
 
+//     //alert("now printing loginReponse.access_token");
+//     console.log(loginResponse.access_token);
+
+//     //alert(loginResponse.access_token);
 //     const userInfo = {
 //       token: loginResponse.access_token
 //     };
 
 //     localStorage.setItem('userInfo', JSON.stringify(userInfo));
-//     alert('inside login method in userActions 2')
 
 //     //Get UserInfo
 //     const userInfoResponse = await getUserInfoApi();
-//     alert('inside login method in userActions 3')
 //     userInfoResponse.token = loginResponse.access_token;
-//     userInfoResponse.refresh_token = loginResponse.refresh_token;
+//     //userInfoResponse.refresh_token = loginResponse.refresh_token;
     
 //     dispatch(userLoginSuccess(userInfoResponse));
   
@@ -87,6 +55,37 @@ export const login = (code) => async (dispatch) => {
 //     dispatch(userLoginFail(getErrorMessage(error)));
 //   }  
 // };
+
+export const login = (usernameOrEmail, password) => async (dispatch) => {
+  try {
+    dispatch(userLoginRequest());
+
+    const loginRequest = {
+      grant_type: 'custom_password',
+      username: usernameOrEmail,
+      password: password
+    };
+
+    //Login
+    const loginResponse = await postLoginApi(loginRequest);
+
+    alert(loginResponse);
+    alert(loginResponse.access_token);
+    const userInfo = {
+      token: loginResponse.access_token
+    };
+
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    //Get UserInfo
+    const userInfoResponse = await getUserInfoApi();
+    userInfoResponse.token = loginResponse.access_token;
+    //userInfoResponse.refresh_token = loginResponse.refresh_token;
+    dispatch(userLoginSuccess(userInfoResponse));
+    localStorage.setItem('userInfo', JSON.stringify(userInfoResponse));
+  } catch (error) {
+    dispatch(userLoginFail(getErrorMessage(error)));
+  }
+};
 
 export const logout = () => (dispatch) => {
   localStorage.clear();
@@ -146,6 +145,7 @@ export const getUserDetails = (userId) => async (dispatch) => {
     } else {
       //Get UserInfo
       userInfoResponse = await getUserInfoApi();
+      alert("got user info");
     }
     dispatch(userDetailsSuccess(userInfoResponse));
   } catch (error) {

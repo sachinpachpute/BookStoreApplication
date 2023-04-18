@@ -11,23 +11,23 @@ const Header = (props) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const parseJwt = (token) => {
-    try {
-      return JSON.parse(atob(token.split(".")[1]));
-    } catch (e) {
-      return null;
-    }
-  };
+  // const parseJwt = (token) => {
+  //   try {
+  //     return JSON.parse(atob(token.split(".")[1]));
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // };
 
-  useEffect(() => {
-    if (userInfo) {
-      const decodedJwt = parseJwt(userInfo.token);
-      //alert("Epiry: "+decodedJwt.exp);
-      if (decodedJwt.exp * 1000 < Date.now()) {
-        logoutHandler();
-      }
-    }
-  }, [userInfo]);
+  // useEffect(() => {
+  //   if (userInfo) {
+  //     const decodedJwt = parseJwt(userInfo.token);
+  //     //alert("Epiry: "+decodedJwt.exp);
+  //     if (decodedJwt.exp * 1000 < Date.now()) {
+  //       logoutHandler();
+  //     }
+  //   }
+  // }, [userInfo]);
 
   // const parseJwt = (token) => {
   //   try {
@@ -90,8 +90,8 @@ const Header = (props) => {
                   <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <LinkContainer to='/redirect'>
-                  <Nav.Link href='/redirect'>
+                <LinkContainer to='/login'>
+                  <Nav.Link href='/login'>
                     <i className='p-1 fas fa-user'></i>Sign In
                   </Nav.Link>
                 </LinkContainer>

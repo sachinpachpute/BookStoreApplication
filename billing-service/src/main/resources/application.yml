@@ -26,7 +26,7 @@ spring:
 
   security:
     jwt:
-      issuer-uri: http://auth-server:3001/oauth2/jwks
+      issuer-uri: http://auth-server:3002/oauth2/jwks
       public-key: classpath:jwt-signing-public-key.txt
 
   main:

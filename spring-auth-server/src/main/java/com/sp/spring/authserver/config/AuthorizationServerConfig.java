@@ -85,7 +85,8 @@ public class AuthorizationServerConfig {
                         a -> a.accessTokenRequestConverters()
                 )*/
                 .oidc(Customizer.withDefaults());
-
+        // Redirect to the login page when not authenticated from the
+        // authorization endpoint
         http.exceptionHandling(
                 e -> e.authenticationEntryPoint(
                         new LoginUrlAuthenticationEntryPoint("/login")
@@ -113,8 +114,22 @@ public class AuthorizationServerConfig {
     //TODO move client registration into DB
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
+
+        RegisteredClient publicClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("client")
+                .clientSecret(passwordEncoder().encode("secret"))
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .tokenSettings(
+                        TokenSettings.builder()
+                                .accessTokenTimeToLive(Duration.ofSeconds(900))
+                                .build()
+                )
+                .build();
+
+        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("client1")
                 //.clientSecret(passwordEncoder().encode("secret"))
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
@@ -134,7 +149,7 @@ public class AuthorizationServerConfig {
                 )
                 .build();
 
-        return new InMemoryRegisteredClientRepository(registeredClient);
+        return new InMemoryRegisteredClientRepository(publicClient, registeredClient);
     }
 
     //Use this Bean if you want to change the URLs exposed by Authorization Server default configuration

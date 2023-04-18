@@ -1,4 +1,4 @@
-import { BACKEND_API_GATEWAY_URL, CLIENT_ID, REDIRECT_URI, AUTHORIZATION_SERVER_BASE_URL } from '../constants/appConstants';
+import { BACKEND_API_GATEWAY_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, AUTHORIZATION_SERVER_BASE_URL } from '../constants/appConstants';
 import axios from 'axios';
 import qs from 'qs';
 import store from '../store';
@@ -25,6 +25,22 @@ export const postSignupApi = (singupRequestBody) => {
   const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/auth/signup`, singupRequestBody, axiosConfig).then((response) => {
     return response.data;
   });
+  return responseData;
+};
+
+export const postLoginApi = async (loginRequestBody) => {
+  const axiosConfig = {
+    headers: {
+      'Authorization': 'Basic ' + btoa(CLIENT_ID + ':' + CLIENT_SECRET),
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+  const loginRequestBodyEncoded = qs.stringify(loginRequestBody);
+  const responseData = await axios
+    .post(`${AUTHORIZATION_SERVER_BASE_URL}/oauth2/token`, loginRequestBodyEncoded, axiosConfig)
+    .then((response) => {
+      return response.data;
+    });
   return responseData;
 };
 
@@ -80,7 +96,8 @@ export const getAccessToken = async (code) => {
 
 export const getUserInfoApi = async () => {
   const axiosConfig = getAxiosConfig();
-  //alert('access token : '+JSON.parse(localStorage.getItem('userInfo'))?.token)  ;
+  alert("Rest API calling user info api");
+  alert('access token : '+JSON.parse(localStorage.getItem('userInfo'))?.token)  ;
     const responseData = await axios.get(`${BACKEND_API_GATEWAY_URL}/api/auth/userInfo`, axiosConfig).then((response) => {
     return response.data;
   });

@@ -52,7 +52,7 @@ spring:
           filters:
             - StripPrefix=2
         - id: auth-server
-          uri: lb://AUTH-SERVER
+          uri: lb://AUTH-SERVER-2
           predicates:
             - Path=/api/auth/**
           filters:

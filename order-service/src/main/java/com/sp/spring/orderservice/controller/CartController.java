@@ -33,4 +33,12 @@ public class CartController {
         return ResponseEntity.ok(cartService.getCart());
 
     }
+
+    @GetMapping("/demoNew")
+    public String demoNew() {
+        System.out.println("Hello 1");
+        System.out.println("Hello 2");
+        System.out.println("Hello 3");
+        return "Demo";
+    }
 }
