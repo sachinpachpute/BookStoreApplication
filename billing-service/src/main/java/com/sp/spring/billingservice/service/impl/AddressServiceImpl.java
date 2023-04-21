@@ -115,7 +115,7 @@ public class AddressServiceImpl implements AddressService {
         if (addressOptional.isPresent()) {
             AddressDao address = addressOptional.get();
 
-            if (!address.getUserId().equals(userIdFromToken)) {
+            if (!address.getUserId().equalsIgnoreCase(userIdFromToken)) {
                 throw new RuntimeException("UnAuthorized");
             }
 

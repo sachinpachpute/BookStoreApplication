@@ -38,7 +38,7 @@ const CartScreen = (props) => {
     if (productId) {
       if (lockUseEffect.current) {
         lockUseEffect.current = false;
-        console.log('i fire once **************************');
+        //console.log('i fire once **************************');
         addToCart(productId, qty);
       }
     } else {
@@ -59,8 +59,8 @@ const CartScreen = (props) => {
   };
 
   let navigate = useNavigate()  
-  const checkoutHandler = () => {
-    navigate('/login?redirect=shipping');
+  const checkoutHandler = () => {    
+    navigate('/shipping');
   };
 
   return (

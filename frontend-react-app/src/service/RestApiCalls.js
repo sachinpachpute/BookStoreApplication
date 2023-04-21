@@ -96,8 +96,8 @@ export const getAccessToken = async (code) => {
 
 export const getUserInfoApi = async () => {
   const axiosConfig = getAxiosConfig();
-  alert("Rest API calling user info api");
-  alert('access token : '+JSON.parse(localStorage.getItem('userInfo'))?.token)  ;
+  //alert("Rest API calling user info api");
+  //alert('access token : '+JSON.parse(localStorage.getItem('userInfo'))?.token)  ;
     const responseData = await axios.get(`${BACKEND_API_GATEWAY_URL}/api/auth/userInfo`, axiosConfig).then((response) => {
     return response.data;
   });

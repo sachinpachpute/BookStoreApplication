@@ -69,8 +69,8 @@ export const login = (usernameOrEmail, password) => async (dispatch) => {
     //Login
     const loginResponse = await postLoginApi(loginRequest);
 
-    alert(loginResponse);
-    alert(loginResponse.access_token);
+    //alert(loginResponse);
+    //alert(loginResponse.access_token);
     const userInfo = {
       token: loginResponse.access_token
     };
@@ -145,7 +145,7 @@ export const getUserDetails = (userId) => async (dispatch) => {
     } else {
       //Get UserInfo
       userInfoResponse = await getUserInfoApi();
-      alert("got user info");
+      //alert("got user info");
     }
     dispatch(userDetailsSuccess(userInfoResponse));
   } catch (error) {
