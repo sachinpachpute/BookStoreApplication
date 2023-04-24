@@ -16,9 +16,6 @@ const LoginScreen = (props) => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
-
-  let navigateLog = useNavigate()
-  let location = useLocation()
   
 //var desire = location.search.slice(1).split("&")[0].split("=")[1]
 // Example: let's take url http://example.com?name=jon&country=us
@@ -27,10 +24,27 @@ const LoginScreen = (props) => {
 // .split("&")[0] splits it into two strings (name=jon and country=us) and takes first one
 // .split("=")[1] splits name=jon into name and jon and takes the second one. Done!
 
-  const redirect = location.search ? location.search.split('=')[1] : '/'
+  
+  // console.log(URL);👉️ http://127.0.0.1:3000/login?redirect=/cart/10?qty=1
+  // console.log(location.search); 👉️ ?redirect=/cart/10?qty=1
+  // const [first, ...rest] = location.search.split('=')[1] ;
+  // console.log(first); 👉️ ?redirect
+  // console.log(rest); 👉️ ['/cart/10?qty', '1']
+  // const remainder = rest.join('=');
+  // console.log(remainder); 👉️ /cart/10?qty=1
+
+
+  let navigateLog = useNavigate()
+  let location = useLocation()
+
+  let redirect = '/';
+  if(location.search){
+    const [first, ...rest] = location.search.split('=') ;    
+    redirect = rest.join('=');
+  }
 
   useEffect(() => {
-    if (userInfo) {      
+    if (userInfo) {  
       navigateLog(`${redirect}`);
     }
   }, [navigateLog, userInfo, redirect])

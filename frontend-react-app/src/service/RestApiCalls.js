@@ -240,7 +240,6 @@ export const getUserApi = async (userId) => {
 
 export const putUserInfoApi = async (userInfoRequestBody) => {
   const axiosConfig = getAxiosConfig();
-  //alert(userInfoRequestBody);
   const responseData = await axios
     .put(`${BACKEND_API_GATEWAY_URL}/api/auth/userInfo`, userInfoRequestBody, axiosConfig)
     .then((response) => {

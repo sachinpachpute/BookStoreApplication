@@ -26,13 +26,14 @@ const CartScreen = (props) => {
   const { userInfo } = userLogin;
   //const redirect = location.search ? location.search.split('=')[1] : '/'  
   const redirect = location.pathname + location.search;
+  //alert(redirect);
 
   const lockUseEffect = useRef(true);
   useEffect(() => {
     if (userInfo === null || userInfo === undefined) {
       //props.history.push(`/login?redirect=${redirect}`);
-      navigateLog(`/redirect?redirect=${redirect}`);
-      //navigateLog(`/redirect`);
+      //navigateLog(`/redirect?redirect=${redirect}`);
+      navigateLog(`/login?redirect=${redirect}`);
       return;
     }
     if (productId) {
