@@ -124,6 +124,6 @@ export const userUpdateProfileSlice = createSlice({
 });
 
 export const { userLoginRequest, userLoginSuccess, userLoginFail, userLogout } = userLoginSlice.actions;
-export const { userRegisterRequest, userRegisterSuccess, userRegisterFail, userRegisterLogout } = userRegisterSlice.actions;
+export const { userRegisterRequest, userRegisterSuccess, userRegisterFail, userRegisterLogout, userRegisterReset } = userRegisterSlice.actions;
 export const { userDetailsRequest, userDetailsSuccess, userDetailsFail } = userDetailsSlice.actions;
 export const { userUpdateProfileRequest, userUpdateProfileSuccess, userUpdateProfileFail, userUpdateProfileReset } = userUpdateProfileSlice.actions;

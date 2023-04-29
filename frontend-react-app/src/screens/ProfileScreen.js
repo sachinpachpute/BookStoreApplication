@@ -54,7 +54,8 @@ const ProfileScreen = ({ history }) => {
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
     } else {
-      dispatch(updateUserProfile({ firstName, lastName, email, password }));
+      dispatch(updateUserProfile({ firstName, lastName, email, password }));    
+      //TODO add a code here or somewhere to fix he issue. Updated user profile is not reflected until loged out
     }
   };
 

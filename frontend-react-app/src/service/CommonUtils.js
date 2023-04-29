@@ -22,5 +22,5 @@ export const isAdmin = () => {
     let decodedToken = jwtDecode(token);
     return decodedToken?.authorities?.includes('ADMIN_USER');
   }
-  return true;
+  return false;
 };

@@ -11,20 +11,15 @@ const Header = (props) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  // const parseJwt = (token) => {
-  //   try {
-  //     return JSON.parse(atob(token.split(".")[1]));
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // };
-
   // useEffect(() => {
   //   if (userInfo) {
   //     const decodedJwt = parseJwt(userInfo.token);
-  //     //alert("Epiry: "+decodedJwt.exp);
+  //     console.log(userInfo.token);
+  //     //alert("Token Epiry: "+decodedJwt.exp);
+  //     //alert("Date.now(): "+Date.now());
   //     if (decodedJwt.exp * 1000 < Date.now()) {
-  //       logoutHandler();
+  //       alert("Token expired clearing local storage");
+  //       localStorage.clear();
   //     }
   //   }
   // }, [userInfo]);
@@ -36,21 +31,17 @@ const Header = (props) => {
   //     return null;
   //   }
   // };
-
-  // if (userInfo) {
-  //   const decodedJwt = parseJwt(userInfo.token);
-  //   //alert("Epiry: "+decodedJwt.exp);
-  //   if (decodedJwt.exp * 1000 < Date.now()) {
-  //     alert("call logout");
-  //   }
-  // }
-  //alert('userLogin '+userLogin);
-  //alert('userLogin.userInfo '+userLogin.userInfo);
   
   // if(userInfo === null){
   //   alert('userInfo is null');
   // } else {
-  //   alert('userInfo: '+userInfo);
+  //   alert('userInfo: '+userInfo.firstName);
+  //   alert('userInfo: '+userInfo.lastName);
+  //   alert('userInfo: '+userInfo.email);
+  //   alert('userInfo: '+userInfo.access_token);
+  //   alert('userInfo: '+userInfo.userId);
+  //   alert('userInfo: '+userInfo.userName);
+  //   alert('userInfo: '+userInfo.token);
   // }
   
   const dispatch = useDispatch();

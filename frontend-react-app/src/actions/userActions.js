@@ -74,12 +74,12 @@ export const login = (usernameOrEmail, password) => async (dispatch) => {
     const userInfo = {
       token: loginResponse.access_token
     };
-
     localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
     //Get UserInfo
     const userInfoResponse = await getUserInfoApi();
     userInfoResponse.token = loginResponse.access_token;
-    //userInfoResponse.refresh_token = loginResponse.refresh_token;
+    userInfoResponse.refresh_token = loginResponse.refresh_token;
     dispatch(userLoginSuccess(userInfoResponse));
     localStorage.setItem('userInfo', JSON.stringify(userInfoResponse));
   } catch (error) {
@@ -99,7 +99,7 @@ export const register = (userName, firstName, email, password) => async (dispatc
 
     //SignUp
     const signUpRequest = {
-      grant_type: 'password',
+      grant_type: 'custom_password',
       userName,
       password,
       firstName,
@@ -111,11 +111,12 @@ export const register = (userName, firstName, email, password) => async (dispatc
 
     //Login
     const loginRequest = {
-      grant_type: 'password',
+      grant_type: 'custom_password',
       username: userName,
       password: password
     };
-    const loginResponse = await getAccessToken(loginRequest);
+
+    const loginResponse = await postLoginApi(loginRequest);
 
     const userInfo = {
       token: loginResponse.access_token
@@ -161,7 +162,7 @@ export const updateUserProfile = (user) => async (dispatch) => {
     await putUserInfoApi(user);
 
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
+    
     const updatedUserInfo = {
       ...userInfo,
       ...user

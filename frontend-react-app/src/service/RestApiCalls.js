@@ -10,11 +10,57 @@ axios.interceptors.response.use(
     const originalRequest = error.config;
 
     // Prevent infinite loops
-    if (error.response.status === 401) {
+    if (error.response.status === 401 && originalRequest.url.includes('grant_type=refresh_token')) {
       localStorage.clear();
       store.dispatch(userLogout());
-      //return Promise.reject(error);
+      return Promise.reject(error);
     }
+
+    if (error.response.status === 401) {
+      alert("refreshing token");
+     
+      const accTkn = JSON.parse(localStorage.getItem('userInfo'))?.access_token;      
+      const refreshToken = JSON.parse(localStorage.getItem('userInfo'))?.refresh_token;
+      
+      if (refreshToken) {       
+        const axiosConfig = {
+          headers: {
+            Authorization: 'Basic ' + btoa(CLIENT_ID + ':' + CLIENT_SECRET),
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        };
+
+        const requestBody = {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken
+        };
+        const requestBodyEncoded = qs.stringify(requestBody);
+
+        return axios
+          .post(`${AUTHORIZATION_SERVER_BASE_URL}/oauth2/token`, requestBodyEncoded, axiosConfig)
+          .then((response) => {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const updatedUserInfo = {
+              ...userInfo,
+              token: response.data.access_token
+            };
+            
+            localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+            axios.defaults.headers['Authorization'] = 'Bearer ' + response.data.access_token;
+            originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access_token;
+            return axios(originalRequest);
+          })
+          .catch((err) => {
+            alert('Error while getting token using refresh token. Looks like even refresh token is expired.'+ err);
+            console.error('Error while getting token using refresh token.', err);
+            store.dispatch(userLogout());
+          });       
+      } else {
+        console.log('Refresh token not available.');
+        store.dispatch(userLogout());
+      }
+    }
+
     // specific error handling done elsewhere
     return Promise.reject(error);
   }
@@ -22,7 +68,7 @@ axios.interceptors.response.use(
 
 export const postSignupApi = (singupRequestBody) => {
   const axiosConfig = getAxiosConfig();
-  const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/auth/signup`, singupRequestBody, axiosConfig).then((response) => {
+  const responseData = axios.post(`${BACKEND_API_GATEWAY_URL}/api/auth/signUp`, singupRequestBody, axiosConfig).then((response) => {
     return response.data;
   });
   return responseData;

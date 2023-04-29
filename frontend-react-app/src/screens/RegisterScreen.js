@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import { register } from '../actions/userActions';
 import FormContainer from '../components/FormContainer';
 import FullPageLoader from '../components/FullPageLoader';
-import { USER_REGISTER_RESET } from '../constants/userConstants';
+import { userRegisterReset } from '../reducers/userSlice';
 
 window.Buffer = window.Buffer || require("buffer").Buffer;
 
@@ -21,15 +21,20 @@ const RegisterScreen = (props) => {
   const dispatch = useDispatch();
   const userRegister = useSelector((state) => state.userRegister);
   let { loading, error, userInfo } = userRegister;
+  let navigateLog = useNavigate()
   let location = useLocation()
 
-  const redirect = location.search ? location.search.substring(location.search.split('=')[1]) : '/';
+  let redirect = '/';
+  if(location.search){
+    const [first, ...rest] = location.search.split('=') ;    
+    redirect = rest.join('=');
+  }
 
   useEffect(() => {
-    if (userInfo) {
-      props.history.push(redirect);
+    if (userInfo) {  
+      navigateLog(`${redirect}`);
     }
-  }, [props.history, userInfo, redirect]);
+  }, [navigateLog, userInfo, redirect])
 
   const registerHandler = (e) => {
     setMessage(null);
@@ -37,7 +42,7 @@ const RegisterScreen = (props) => {
     //Register
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
-      dispatch({ type: USER_REGISTER_RESET });
+      dispatch(userRegisterReset());
     } else {
       dispatch(register(userName, firstName, email, password));
     }

@@ -21,6 +21,8 @@ public class ResourceServerConfig {
     @Order(2)
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
 
+        //TODO Sachin pass CSRF token
+        http.csrf(csrf->csrf.disable());
         http.oauth2ResourceServer(
                 r -> r.jwt().jwkSetUri(issuerUri)
                         .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())

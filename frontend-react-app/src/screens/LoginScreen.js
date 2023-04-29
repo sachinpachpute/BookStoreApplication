@@ -25,7 +25,7 @@ const LoginScreen = (props) => {
 // .split("=")[1] splits name=jon into name and jon and takes the second one. Done!
 
   
-  // console.log(URL);👉️ http://127.0.0.1:3000/login?redirect=/cart/10?qty=1
+  // URL 👉️ http://127.0.0.1:3000/login?redirect=/cart/10?qty=1
   // console.log(location.search); 👉️ ?redirect=/cart/10?qty=1
   // const [first, ...rest] = location.search.split('=')[1] ;
   // console.log(first); 👉️ ?redirect
