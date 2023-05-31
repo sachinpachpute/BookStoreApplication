@@ -21,12 +21,10 @@ public class ResourceServerConfig {
                 r -> r.jwt().jwkSetUri(issuerUri)
                         .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
         );
-        http.authorizeHttpRequests()
-                /*.requestMatchers("/**").permitAll()
-                .requestMatchers("/order/**").permitAll()
-                //.requestMatchers("/cart").permitAll()
-                .requestMatchers("/services").hasAuthority("SCOPE_services:read")*/
-                .anyRequest().authenticated();
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/**").permitAll()
+                .anyRequest().authenticated()
+        );
         return http.build();
     }
 }

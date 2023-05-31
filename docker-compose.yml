@@ -59,19 +59,19 @@ services:
 
   spring-auth-server:
     build:
-      context: ./spring-auth-server
+      context: ./spring-auth-server-2
       args:
-        JAR_FILE: spring-auth-server-0.0.1-SNAPSHOT.jar
+        JAR_FILE: spring-auth-server-2-0.0.1-SNAPSHOT.jar
       dockerfile: Dockerfile
     image: spring-auth-server
     container_name: spring-auth-server
     hostname: spring-auth-server
     ports:
-      - "3001:3001"
+      - "3002:3002"
     networks:
       - store-app-network
     environment:
-      - SERVER_PORT=3001
+      - SERVER_PORT=3002
       - SPRING_PROFILES_ACTIVE=docker
       - MYSQL_HOST=store-mysql-db
       - MYSQL_USER=bookstoreDBA
@@ -98,6 +98,7 @@ services:
       - MYSQL_USER=bookstoreDBA
       - MYSQL_PASSWORD=PaSSworD
       - EUREKA_HOST=eureka-discovery-server:8761
+      - AUTH_SERVER_HOST=spring-auth-server:3002
 
   catalog-service:
     build:
@@ -119,6 +120,7 @@ services:
       - MYSQL_USER=bookstoreDBA
       - MYSQL_PASSWORD=PaSSworD
       - EUREKA_HOST=eureka-discovery-server:8761
+      - AUTH_SERVER_HOST=spring-auth-server:3002
 
 
   order-service:
@@ -141,6 +143,7 @@ services:
       - MYSQL_USER=bookstoreDBA
       - MYSQL_PASSWORD=PaSSworD
       - EUREKA_HOST=eureka-discovery-server:8761
+      - AUTH_SERVER_HOST=spring-auth-server:3002
 
   payment-service:
     build:
@@ -162,6 +165,7 @@ services:
       - MYSQL_USER=bookstoreDBA
       - MYSQL_PASSWORD=PaSSworD
       - EUREKA_HOST=eureka-discovery-server:8761
+      - AUTH_SERVER_HOST=spring-auth-server:3002
 
 #  # Tracing service
 #  store-zipkin:
