@@ -1,4 +1,4 @@
-This ongoing E-commerce project enables users to add books to their cart and purchase them. The application is being developed using Java, Spring, and React. Spring Cloud Microservices and the Spring Boot Framework has been extensively used to ensure the application's distribution.
+This ongoing E-commerce project enables users to add books to their cart and purchase them. The application is being developed using Java, Spring, and React. Spring Cloud Microservices and the Spring Boot Framework has been extensively used to ensure the application is distributed in nature.
 
 All microservices are built using Spring Boot and are registered with the Eureka Discovery Server.
 
